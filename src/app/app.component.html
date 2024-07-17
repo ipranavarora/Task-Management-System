@@ -1,24 +1,33 @@
-<div class="container">
-  <add-wish-form (addWish)="addWish($event)"></add-wish-form>
-
-  <div class="row mt-3">
-    <wish-filter (filter)="setFilter($event)"></wish-filter>
-  </div>
-
-  <div class="row mt-3">
-    <button (click)="exportToCSV()">Export to CSV</button>
-  </div>
-
-  <div class="row mt-3">
-    <ng-container *ngIf="(items$ | async) as items">
-      <wish-list [wishes]="items"></wish-list>
-    </ng-container>
-    <div *ngIf="!(items$ | async)">
-      Loading or no items available
+<div class="container my-4">
+  <div class="row">
+    <div class="col-12">
+      <add-wish-form (addWish)="addWish($event)"></add-wish-form>
     </div>
   </div>
 
-  <div class="row mt-3">
-    <history-log></history-log>
+  <div class="row mt-4">
+    <div class="col-md-6 mb-3">
+      <button class="btn btn-secondary" (click)="exportToCSV()">Export to CSV</button>
+    </div>
+    <div class="col-md-6">
+      <wish-filter (filter)="setFilter($event)"></wish-filter>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <ng-container *ngIf="(items$ | async) as items">
+        <wish-list [wishes]="items"></wish-list>
+      </ng-container>
+      <div *ngIf="!(items$ | async)" class="alert alert-info">
+        Loading or no items available
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <history-log></history-log>
+    </div>
   </div>
 </div>

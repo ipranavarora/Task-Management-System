@@ -1,20 +1,67 @@
-<div class="row mt-3">
-  <div *ngIf="wishes && wishes.length === 0; else showItems">
-    There are no items in your list
-  </div>
+<!-- src/app/wish-list/wish-list.component.html -->
 
-  <ng-template #showItems>
-    <ul class="wish-list">
-      <li *ngFor="let wish of wishes">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="checkbox" type="checkbox" [checked]="wish.isComplete" (click)="toggleItem(wish)"> 
-            {{wish.wishText}} - {{wish.description}} - {{wish.dueDate | date}} - {{wish.priority}} - {{wish.status}}
-          </label>
+<ul class="list-group wish-list">
+  <li *ngFor="let wish of wishes" class="list-group-item">
+    <ng-container *ngIf="editingItemId !== wish.id; else editForm">
+      <!-- Display wish details -->
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="me-3">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [checked]="wish.isComplete" (change)="toggleItem(wish)" [id]="'checkbox-' + wish.id">
+            <label class="form-check-label" [for]="'checkbox-' + wish.id">
+              <span [ngClass]="{'text-decoration-line-through': wish.isComplete}">
+                <strong>Title:</strong> {{ wish.wishText }}
+              </span>
+            </label>
+          </div>
+          <div [ngClass]="{'text-decoration-line-through': wish.isComplete}">
+            <small>
+              <div><strong>Description:</strong> {{ wish.description }}</div>
+              <div><strong>Due Date:</strong> {{ wish.dueDate | date:'mediumDate' }}</div>
+              <div><strong>Priority:</strong> {{ wish.priority }}</div>
+              <div><strong>Status:</strong> {{ wish.status }}</div>
+            </small>
+          </div>
         </div>
-        <button (click)="editWish(wish)">Edit</button>
-        <button (click)="deleteWish(wish)">Delete</button>
-      </li>
-    </ul>
-  </ng-template>
-</div>
+        <div>
+          <button class="btn btn-sm btn-outline-primary me-2" (click)="editWish(wish)">Edit</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteWish(wish)">Delete</button>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Edit Form -->
+    <ng-template #editForm>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" [(ngModel)]="wish.wishText" placeholder="Wish Text">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Description</label>
+          <input type="text" class="form-control" [(ngModel)]="wish.description" placeholder="Description">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Due Date</label>
+          <input type="date" class="form-control" [(ngModel)]="wish.dueDate" placeholder="Due Date">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Priority</label>
+          <select class="form-select" [(ngModel)]="wish.priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Status</label>
+          <input type="text" class="form-control" [(ngModel)]="wish.status" placeholder="Status">
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary me-2" (click)="saveWish(wish)">Save</button>
+          <button class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </div>
+    </ng-template>
+  </li>
+</ul>
